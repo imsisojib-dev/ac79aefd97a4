@@ -6,7 +6,7 @@ lib/
 │   ├── di/                        # Dependency injection
 │   ├── errors/                    # Error handling
 │   ├── utils/                     # Helpers, extensions, constants
-│   ├── theme/                     # App theme, colors, text styles
+│   ├── resources/                 # App theme, colors, text styles
 │   └── widgets/                   # Reusable UI components
 │
 ├── features/                      # Feature modules
@@ -20,8 +20,8 @@ lib/
 │   │   │   ├── repositories/      # Repository contracts
 │   │   │   └── usecases/          # Business logic
 │   │   └── presentation/
-│   │       ├── bloc/              # State management (Bloc/Cubit/Riverpod)
-│   │       ├── pages/             # Full screens
+│   │       ├── providers/         # State management
+│   │       ├── screens/           # Full screens
 │   │       └── widgets/           # Feature-specific widgets
 │   │
 │   ├── home/

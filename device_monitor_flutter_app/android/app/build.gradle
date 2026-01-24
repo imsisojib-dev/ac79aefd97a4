@@ -43,7 +43,7 @@ android {
 
     defaultConfig {
         applicationId "com.device_monitor"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 24
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
