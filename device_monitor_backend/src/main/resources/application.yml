@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: device_monitor_backend
+  banner:
+    location: banner.txt
+server:
+  servlet.context-path: /device_monitor
+  port: ${APP_PORT}
+  
+# in milliseconds, 1000 milli = 1 seconds
+scheduler_delay: 10000
+
+app.name: Device Monitor Backend
+app:
+  secret-code: ${APP_SECRET}
+
+---
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_DB_SERVER_ADDRESS}:${POSTGRES_DB_SERVER_PORT}/postgres?createIfNotExists=true
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
+  # JPA properties
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: true
+
+api:
+  security:
+    enabled: true
+    # Single API key (simple setup)
+    key: Jw6KLwYR9X3mF8pQ2nT5vZ7xA4bC6dE8
+    # Your service's key for calling other services
+    service-key: ${SERVICE_API_KEY:your-service-key}
+    # Multiple API keys (for different services)
+    keys: "{'${X_API_KEY}':'${X_SERVICE_NAME}'}"
+
+## File Storage Properties
+file:
+  upload-dir: file/
+
