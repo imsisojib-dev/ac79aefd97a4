@@ -1,4 +1,4 @@
-### APP
+### Flutter App ----------------------------------------------------------------------
 # Miscellaneous
 *.class
 *.log
@@ -44,3 +44,36 @@ device_monitor_flutter_app/android/app/debug
 device_monitor_flutter_app/android/app/profile
 device_monitor_flutter_app/android/app/release
 device_monitor_flutter_app/android/app/.cxx
+
+
+### BACKEND ----------------------------------------------------------------------
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+device_monitor_backend/.apt_generated
+device_monitor_backend/.classpath
+device_monitor_backend/.factorypath
+device_monitor_backend/.project
+device_monitor_backend/.settings
+device_monitor_backend/.springBeans
+device_monitor_backend/.sts4-cache
+
+### IntelliJ IDEA ### 
+device_monitor_backend/.idea
+### NetBeans ###
+device_monitor_backend/nbproject/private/
+device_monitor_backend/nbbuild/
+device_monitor_backend/dist/
+device_monitor_backend/nbdist/
+device_monitor_backend/.nb-gradle/
+device_monitor_backend/build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+device_monitor_backend/.vscode/
+

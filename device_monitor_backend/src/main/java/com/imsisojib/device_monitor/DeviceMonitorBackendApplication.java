@@ -1,0 +1,13 @@
+package com.imsisojib.device_monitor;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DeviceMonitorBackendApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(DeviceMonitorBackendApplication.class, args);
+	}
+
+}
