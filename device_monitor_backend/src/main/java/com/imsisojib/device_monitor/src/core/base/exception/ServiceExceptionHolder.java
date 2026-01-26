@@ -22,7 +22,7 @@ public class ServiceExceptionHolder {
 
 	public static class ResourceNotFoundException extends ServiceException {
 		public ResourceNotFoundException(String message) {
-			super(400, message);
+			super(404, message);
 		}
 	}
 
