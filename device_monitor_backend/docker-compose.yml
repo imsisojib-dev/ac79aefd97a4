@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  device-monitor-service:
+    container_name: device-monitor-service
+    platform: linux/amd64
+    build:
+      context: .
+    ports:
+      - "8088:8088" #external-port:internal-port
+    environment:
+      - "POSTGRES_DB_SERVER_ADDRESS=172.236.151.18"
+      - "POSTGRES_DB_SERVER_PORT=5432"
+      - "POSTGRES_USER=imsisojib"
+      - "POSTGRES_PASSWORD=postgresql"
+    restart: unless-stopped
