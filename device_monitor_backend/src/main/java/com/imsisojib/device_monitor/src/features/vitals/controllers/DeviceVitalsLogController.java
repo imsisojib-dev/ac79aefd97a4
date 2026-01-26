@@ -1,4 +1,4 @@
-package com.imsisojib.device_monitor.src.features.device_vitals.controllers;
+package com.imsisojib.device_monitor.src.features.vitals.controllers;
 
 import com.imsisojib.device_monitor.src.core.base.response.BaseResponse;
 import org.springframework.http.HttpStatus;
