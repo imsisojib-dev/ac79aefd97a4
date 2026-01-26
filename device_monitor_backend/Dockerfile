@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /home/app
 COPY .env .env
-COPY --from=build /home/app/target/app.jar /usr/local/lib/app.jar
+COPY --from=build /root/ac79aefd97a4/device_monitor_backend/target/app.jar /usr/local/lib/app.jar
 
 EXPOSE 8088
 ENTRYPOINT ["java", "-Djava.awt.headless=true", "-jar", "/usr/local/lib/app.jar"]
