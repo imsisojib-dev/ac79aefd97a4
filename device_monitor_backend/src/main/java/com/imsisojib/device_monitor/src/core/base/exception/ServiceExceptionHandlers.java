@@ -122,7 +122,6 @@ public class ServiceExceptionHandlers {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public BaseResponse handleThrowable(final Exception ex) {
-        System.out.println("internal server error start");
         ex.printStackTrace();
         log.error(ex.getMessage());
         return BaseResponse.build(HttpStatus.INTERNAL_SERVER_ERROR).message("Internal server error while processing request." + ex.getClass().getCanonicalName());

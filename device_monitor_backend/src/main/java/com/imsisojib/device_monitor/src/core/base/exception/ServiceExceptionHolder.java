@@ -106,9 +106,7 @@ public class ServiceExceptionHolder {
 
 
 		private static String getMessageType(String message) {
-			System.out.println("12 > " + message);
 			if (message != null && message.length() > 55) {
-//				System.out.println(message.substring(52, 54));
 				return message.substring(52, 54);
 			}
 			return "";
