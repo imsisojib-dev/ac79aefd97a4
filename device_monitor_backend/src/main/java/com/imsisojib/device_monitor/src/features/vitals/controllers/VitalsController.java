@@ -19,18 +19,16 @@ public class VitalsController {
     private final VitalsService vitalsService;
 
     @PostMapping
-    public ResponseEntity<BaseResponse> saveVitals(@RequestBody VitalsDto vitalsDto) {
-        log.info("Save vitals request received");
+    public BaseResponse saveVitals(@RequestBody VitalsDto vitalsDto) {
         VitalsDto result = vitalsService.saveVitals(vitalsDto);
-        return ResponseEntity.ok(
-                BaseResponse.build(HttpStatus.OK)
-                        .message("Vitals data saved successfully")
-                        .body(result)
-        );
+        return BaseResponse.build(HttpStatus.OK)
+                .message("Vitals data saved successfully")
+                .body(result);
     }
 
+    // Using POST cause to get filter data as body
     @PostMapping("/{deviceId}")
-    public ResponseEntity<BaseResponse> getVitalsByDevice(
+    public BaseResponse getVitalsByDevice(
             @PathVariable String deviceId,
             @RequestBody(required = false) BaseRequest<VitalsDto> request) {
 
@@ -40,7 +38,6 @@ public class VitalsController {
             request = new BaseRequest<>();
         }
 
-        BaseResponse response = vitalsService.getVitalsByDeviceId(deviceId, request);
-        return ResponseEntity.ok(response);
+        return vitalsService.getVitalsByDeviceId(deviceId, request);
     }
 }

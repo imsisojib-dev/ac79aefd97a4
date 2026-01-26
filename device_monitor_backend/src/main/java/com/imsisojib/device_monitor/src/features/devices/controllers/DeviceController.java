@@ -25,6 +25,7 @@ public class DeviceController {
                 .body(result);
     }
 
+    // Using POST cause to get filter data as body
     @PostMapping("/list")
     public BaseResponse getDevices(@RequestBody(required = false) BaseRequest<DeviceDto> request) {
         return deviceService.getList(request);
