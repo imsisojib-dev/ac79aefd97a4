@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_monitor/src/config/env.dart';
+
 class TokenService{
   String _token = "";
   TokenService();
@@ -15,15 +17,17 @@ class TokenService{
 
   Map<String,String> getHeadersForJson(){
     return {
-      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.contentTypeHeader: "services/json",
       HttpHeaders.connectionHeader : "keep-alive",
-      HttpHeaders.authorizationHeader : "Bearer $_token",
+      'X-API-Key' : Env.X_API_KEY,
+      'X-Service-Name' : Env.X_SERVICE_NAME,
+      //HttpHeaders.authorizationHeader : "Bearer $_token",
     };
   }
 
   Map<String,String> getUnAuthHeadersForJson(){
     return {
-      HttpHeaders.contentTypeHeader: "application/json",
+      HttpHeaders.contentTypeHeader: "services/json",
       HttpHeaders.connectionHeader : "keep-alive",
     };
   }
