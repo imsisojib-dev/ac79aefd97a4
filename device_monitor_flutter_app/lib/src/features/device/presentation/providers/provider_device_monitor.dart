@@ -31,7 +31,8 @@ class ProviderDeviceMonitor extends ChangeNotifier {
     notifyListeners();
   }
 
-  void checkDeviceStatus() {
+  void checkDeviceStatus() async{
+    await Future.delayed(Duration(seconds: 2));
     String? cachedJson = sl<ICacheRepository>().fetchDeviceEntityJson();
     if (cachedJson?.isEmpty ?? true) {
       //means need to register device
