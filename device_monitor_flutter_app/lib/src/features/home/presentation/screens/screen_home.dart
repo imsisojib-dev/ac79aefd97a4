@@ -3,7 +3,10 @@ import 'package:device_monitor/src/config/resources/app_theme.dart';
 import 'package:device_monitor/src/config/routes/routes.dart';
 import 'package:device_monitor/src/core/enums/e_loading.dart';
 import 'package:device_monitor/src/core/utils/helpers/format_helper.dart';
+import 'package:device_monitor/src/core/utils/helpers/widget_helper.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
+import 'package:device_monitor/src/features/device/presentation/providers/provider_device_monitor.dart';
+import 'package:device_monitor/src/features/home/presentation/widgets/modern_vital_card.dart';
 import 'package:device_monitor/src/features/vitals/presentation/providers/provider_vitals.dart';
 import 'package:device_monitor/src/features/history/presentation/screen_history.dart';
 import 'package:flutter/material.dart';
@@ -242,7 +245,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        _getHealthIcon(healthScore),
+                        WidgetHelper.getHealthIcon(healthScore),
                         color: _getHealthColor(healthScore),
                         size: 20,
                       ),
@@ -289,7 +292,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
           crossAxisSpacing: 8,
           childAspectRatio: 0.9,
           children: [
-            _buildModernVitalCard(
+            ModernVitalCard(
               title: 'Thermal',
               value: provider.currentVitals!.thermalStatus.toString(),
               label: AppTheme.getThermalLabel(
@@ -303,21 +306,21 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
               percentage: (provider.currentVitals!.thermalStatus / 3 * 100).toInt(),
               isDark: isDark,
             ),
-            _buildModernVitalCard(
+            ModernVitalCard(
               title: 'Battery',
               value: '${provider.currentVitals!.batteryLevel}',
               label: '%',
               icon: Icons.battery_charging_full_rounded,
-              color: _getBatteryColor(provider.currentVitals!.batteryLevel),
+              color: WidgetHelper.getBatteryColor(provider.currentVitals!.batteryLevel),
               percentage: provider.currentVitals!.batteryLevel,
               isDark: isDark,
             ),
-            _buildModernVitalCard(
+            ModernVitalCard(
               title: 'Memory',
               value: '${provider.currentVitals!.memoryUsage}',
               label: '%',
               icon: Icons.memory_rounded,
-              color: _getMemoryColor(provider.currentVitals!.memoryUsage),
+              color: WidgetHelper.getMemoryColor(provider.currentVitals!.memoryUsage),
               percentage: provider.currentVitals!.memoryUsage,
               isDark: isDark,
             ),
@@ -346,7 +349,11 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                 isDark,
                 "View\nHistory",
                 () {
-                  Navigator.pushNamed(context, Routes.historyScreen);
+                  Navigator.pushNamed(
+                    context,
+                    Routes.historyScreen,
+                    arguments: context.read<ProviderDeviceMonitor>().currentDevice?.deviceId,
+                  );
                 },
               ),
             ),
@@ -841,27 +848,6 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
     if (score >= 80) return AppColors.successGreen;
     if (score >= 60) return AppColors.infoBlue;
     if (score >= 40) return AppColors.warningAmber;
-    return AppColors.errorRed;
-  }
-
-  IconData _getHealthIcon(double score) {
-    if (score >= 80) return Icons.sentiment_very_satisfied;
-    if (score >= 60) return Icons.sentiment_satisfied;
-    if (score >= 40) return Icons.sentiment_neutral;
-    return Icons.sentiment_dissatisfied;
-  }
-
-  Color _getBatteryColor(int level) {
-    if (level >= 80) return AppColors.successGreen;
-    if (level >= 50) return AppColors.infoBlue;
-    if (level >= 20) return AppColors.warningAmber;
-    return AppColors.errorRed;
-  }
-
-  Color _getMemoryColor(int usage) {
-    if (usage <= 50) return AppColors.successGreen;
-    if (usage <= 70) return AppColors.infoBlue;
-    if (usage <= 85) return AppColors.warningAmber;
     return AppColors.errorRed;
   }
 }

@@ -5,6 +5,7 @@ import 'package:device_monitor/src/core/services/api_interceptor.dart';
 import 'package:device_monitor/src/core/services/device_vitals_service.dart';
 import 'package:device_monitor/src/core/services/navigation_service.dart';
 import 'package:device_monitor/src/core/services/token_service.dart';
+import 'package:device_monitor/src/features/analytics/presentation/providers/provider_analytics.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
 import 'package:device_monitor/src/features/device/data/repositories/repository_device.dart';
 import 'package:device_monitor/src/features/device/domain/interfaces/i_repository_device.dart';
@@ -39,6 +40,7 @@ Future<void> init() async {
   sl.registerFactory(() => ProviderTheme(),);
   sl.registerFactory(() => ProviderVitals(),);
   sl.registerFactory(() => ProviderHistory(),);
+  sl.registerFactory(() => ProviderAnalytics(),);
 
   //interceptors
   sl.registerLazySingleton<IApiInterceptor>(() => ApiInterceptor());

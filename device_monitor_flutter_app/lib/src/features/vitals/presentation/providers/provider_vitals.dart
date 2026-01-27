@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:device_monitor/src/config/routes/routes.dart';
 import 'package:device_monitor/src/core/di/di_container.dart';
+import 'package:device_monitor/src/core/domain/interfaces/interface_cache_repository.dart';
 import 'package:device_monitor/src/core/enums/e_dialog_type.dart';
 import 'package:device_monitor/src/core/enums/e_loading.dart';
 import 'package:device_monitor/src/core/services/device_vitals_service.dart';

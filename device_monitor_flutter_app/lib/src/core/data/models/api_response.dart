@@ -1,3 +1,5 @@
+import 'package:device_monitor/src/core/data/models/meta.dart';
+
 typedef JsonParser<T> = T Function(dynamic json);
 
 class ApiResponse<T> {
@@ -5,12 +7,14 @@ class ApiResponse<T> {
   T? data;
   String? status;
   String? message;
+  Meta? meta;
 
   ApiResponse({
     this.statusCode,
     this.data,
     this.status,
     this.message,
+    this.meta,
   });
 
   factory ApiResponse.fromJson(
@@ -22,6 +26,7 @@ class ApiResponse<T> {
       status: json['status'],
       message: json['message'],
       data: json['data'] != null ? parser(json['data']) : null,
+      meta: Meta.fromJson(json['meta']),
     );
   }
 }

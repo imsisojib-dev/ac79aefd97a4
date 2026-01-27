@@ -149,6 +149,28 @@ class WidgetHelper {
       },
     );
   }
+
+  static IconData getHealthIcon(double score) {
+    if (score >= 80) return Icons.sentiment_very_satisfied;
+    if (score >= 60) return Icons.sentiment_satisfied;
+    if (score >= 40) return Icons.sentiment_neutral;
+    return Icons.sentiment_dissatisfied;
+  }
+
+  static Color getBatteryColor(int level) {
+    if (level >= 80) return AppColors.successGreen;
+    if (level >= 50) return AppColors.infoBlue;
+    if (level >= 20) return AppColors.warningAmber;
+    return AppColors.errorRed;
+  }
+
+  static Color getMemoryColor(int usage) {
+    if (usage <= 50) return AppColors.successGreen;
+    if (usage <= 70) return AppColors.infoBlue;
+    if (usage <= 85) return AppColors.warningAmber;
+    return AppColors.errorRed;
+  }
+
 }
 
 class _BlurryDialog extends StatelessWidget {
