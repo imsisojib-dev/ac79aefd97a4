@@ -2,9 +2,45 @@ import 'package:flutter/material.dart';
 
 class AppColors {
 
-  //textColor
-  static const Color textColorLight = Color(0xFF000000);
-  static const Color textColorDark = Color(0xFFFAFAFA);
+  //textColor-Light
+  static const Color textColorLight = Color(0xFF242424);
+  static const Color textSecondaryColorLight = Color(0xFF777777);
+  static const Color textColorHintLight = Color(0xffA5B8BB);
+  //textColor-Dark
+  static const Color textColorDark = Color(0xFFFFFFFF);
+  static const Color disabledColor = Color(0xFFE5EAEB);
+  static const Color appBg = Color(0xFFF9F9F9);
+
+
+  // Green color palette
+  static const Color primaryGreen = Color(0xFF10B981); // Emerald-500
+  static const Color darkGreen = Color(0xFF059669); // Emerald-600
+  static const Color lightGreen = Color(0xFF34D399); // Emerald-400
+  static const Color veryLightGreen = Color(0xFFD1FAE5); // Emerald-100
+
+  static const Color secondaryTeal = Color(0xFF14B8A6); // Teal-500
+  static const Color accentLime = Color(0xFF84CC16); // Lime-500
+
+
+
+  // Status colors
+  static const Color successGreen = Color(0xFF22C55E); // Green-500
+  static const Color warningAmber = Color(0xFFF59E0B); // Amber-500
+  static const Color errorRed = Color(0xFFEF4444); // Red-500
+  static const Color infoBlue = Color(0xFF3B82F6); // Blue-500
+
+  //gradient background
+  static const List<Color> gradientDarkBackground = [
+    Color(0xFF0F172A),
+    Color(0xFF1E293B),
+    Color(0xFF0F172A),
+  ];
+
+  static const List<Color> gradientLightBackground = [
+    Color(0xFFECFDF5),
+    Color(0xFFF0FDF4),
+    Color(0xFFDCFCE7),
+  ];
 
   //light mode
   static const Color primaryColorLight = Color(0xFF344955);

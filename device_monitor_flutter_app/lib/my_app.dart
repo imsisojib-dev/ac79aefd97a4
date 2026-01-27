@@ -1,8 +1,7 @@
-import 'package:device_monitor/src/core/resources/app_theme.dart';
 import 'package:device_monitor/src/core/services/navigation_service.dart';
 import 'package:device_monitor/src/core/services/token_service.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
-import 'package:device_monitor/src/features/vitals/presentation/providers/vitals_providers.dart';
+import 'package:device_monitor/src/features/home/presentation/providers/provider_home.dart';
 import 'package:flutter/material.dart';
 import 'package:device_monitor/src/config/routes/router_helper.dart';
 import 'package:device_monitor/src/config/routes/routes.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:device_monitor/src/core/domain/interfaces/interface_cache_repository.dart';
 import 'package:device_monitor/src/features/device/presentation/providers/provider_device_monitor.dart';
+import 'src/config/resources/app_theme.dart';
 import 'src/core/di/di_container.dart' as di;
 import 'src/core/di/di_container.dart';
 
@@ -25,8 +25,7 @@ Future<void> initApp()async{
       providers: [
         ChangeNotifierProvider(create: (context) => di.sl<ProviderDeviceMonitor>()),
         ChangeNotifierProvider(create: (_) => di.sl<ProviderTheme>()),
-        ChangeNotifierProvider(create: (_) => DashboardProvider()),
-        ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ChangeNotifierProvider(create: (_) => di.sl<ProviderHome>()),
       ],
       child: const MyApp(),
     ),

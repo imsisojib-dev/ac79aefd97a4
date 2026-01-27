@@ -4,5 +4,7 @@ abstract class ICacheRepository{
   String? fetchToken();
   Future<void>? saveCurrentUserId(int? id);
   int? fetchCurrentUserId();
+  String? fetchDeviceEntityJson();
+  Future<void> saveDeviceEntityJson(String encodedJson);
   void logout();
 }

@@ -17,7 +17,7 @@ class TokenService{
 
   Map<String,String> getHeadersForJson(){
     return {
-      HttpHeaders.contentTypeHeader: "services/json",
+      HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.connectionHeader : "keep-alive",
       'X-API-Key' : Env.X_API_KEY,
       'X-Service-Name' : Env.X_SERVICE_NAME,
@@ -27,7 +27,7 @@ class TokenService{
 
   Map<String,String> getUnAuthHeadersForJson(){
     return {
-      HttpHeaders.contentTypeHeader: "services/json",
+      HttpHeaders.contentTypeHeader: "application/json",
       HttpHeaders.connectionHeader : "keep-alive",
     };
   }

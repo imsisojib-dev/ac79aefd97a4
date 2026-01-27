@@ -23,8 +23,9 @@ class RepositoryDevice implements IRepositoryDevice {
   Future<ApiResponse<DeviceEntity>> registerDevice(RequestRegisterDevice request) async {
     String url = "${Env.baseUrl}${ConfigApi.devices}";
 
-    http.Response response = await apiInterceptor.get(
+    http.Response response = await apiInterceptor.post(
       url: url,
+      body: jsonEncode(request.toJson()),
       headers: tokenService.getHeadersForJson(),
     );
 
