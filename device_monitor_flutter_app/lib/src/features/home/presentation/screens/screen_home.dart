@@ -69,38 +69,14 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
         actions: [
           Consumer<ProviderTheme>(
             builder: (context, themeProvider, child) {
-              return Container(
-                margin: const EdgeInsets.only(right: 8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(12),
+              return IconButton(
+                icon: Icon(
+                  themeProvider.isDark ? Icons.light_mode : Icons.dark_mode,
                 ),
-                child: IconButton(
-                  icon: Icon(
-                    themeProvider.isDark ? Icons.light_mode : Icons.dark_mode,
-                  ),
-                  onPressed: () => themeProvider.toggleTheme(),
-                  tooltip: 'Toggle Theme',
-                ),
+                onPressed: () => themeProvider.toggleTheme(),
+                tooltip: 'Toggle Theme',
               );
             },
-          ),
-          Container(
-            margin: const EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.history),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ScreenHistory()),
-                );
-              },
-              tooltip: 'View History',
-            ),
           ),
         ],
       ),
