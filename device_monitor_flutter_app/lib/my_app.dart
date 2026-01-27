@@ -1,5 +1,6 @@
 import 'package:device_monitor/src/core/services/navigation_service.dart';
 import 'package:device_monitor/src/core/services/token_service.dart';
+import 'package:device_monitor/src/core/services/vitals_background_service.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
 import 'package:device_monitor/src/features/vitals/presentation/providers/provider_vitals.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:device_monitor/src/core/domain/interfaces/interface_cache_repository.dart';
 import 'package:device_monitor/src/features/device/presentation/providers/provider_device_monitor.dart';
+import 'package:workmanager/workmanager.dart';
 import 'src/config/resources/app_theme.dart';
 import 'src/core/di/di_container.dart' as di;
 import 'src/core/di/di_container.dart';
+
+const String storeVitalsToAPI = "sendVitalsLogToAPI";
+
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    switch (task) {
+      case storeVitalsToAPI:
+        await VitalsBackgroundService.sendVitalsLogToAPI();
+        break;
+    }
+    return Future.value(true);
+  });
+}
 
 Future<void> initApp()async{
   await di.init();  //initializing Dependency Injection
