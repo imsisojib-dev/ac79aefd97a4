@@ -26,7 +26,7 @@ class ApiResponse<T> {
       status: json['status'],
       message: json['message'],
       data: json['data'] != null ? parser(json['data']) : null,
-      meta: Meta.fromJson(json['meta']),
+      meta: json['meta']==null? null: Meta.fromJson(json['meta']),
     );
   }
 }
