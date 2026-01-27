@@ -10,7 +10,9 @@ import 'package:device_monitor/src/features/device/data/repositories/repository_
 import 'package:device_monitor/src/features/device/domain/interfaces/i_repository_device.dart';
 import 'package:device_monitor/src/features/device/presentation/providers/provider_device_monitor.dart';
 import 'package:device_monitor/src/features/history/presentation/providers/provider_history.dart';
-import 'package:device_monitor/src/features/home/presentation/providers/provider_home.dart';
+import 'package:device_monitor/src/features/vitals/data/repopsitories/repository_vitals.dart';
+import 'package:device_monitor/src/features/vitals/domain/interfaces/i_repository_vitals.dart';
+import 'package:device_monitor/src/features/vitals/presentation/providers/provider_vitals.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,13 +30,14 @@ Future<void> init() async {
   //#region Repositories
   sl.registerLazySingleton<ICacheRepository>(() => CacheRepositoryImpl(sharedPreference: sl()));
   sl.registerLazySingleton<IRepositoryDevice>(() => RepositoryDevice(apiInterceptor: sl(), tokenService: sl()));
+  sl.registerLazySingleton<IRepositoryVitals>(() => RepositoryVitals(apiInterceptor: sl(), tokenService: sl()));
   //#endregion
 
   ///PROVIDERS
   //region Providers
   sl.registerFactory(() => ProviderDeviceMonitor(),);
   sl.registerFactory(() => ProviderTheme(),);
-  sl.registerFactory(() => ProviderHome(),);
+  sl.registerFactory(() => ProviderVitals(),);
   sl.registerFactory(() => ProviderHistory(),);
 
   //interceptors

@@ -1,9 +1,10 @@
 import 'package:device_monitor/src/config/resources/app_colors.dart';
 import 'package:device_monitor/src/config/resources/app_theme.dart';
 import 'package:device_monitor/src/config/routes/routes.dart';
+import 'package:device_monitor/src/core/enums/e_loading.dart';
 import 'package:device_monitor/src/core/utils/helpers/format_helper.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
-import 'package:device_monitor/src/features/home/presentation/providers/provider_home.dart';
+import 'package:device_monitor/src/features/vitals/presentation/providers/provider_vitals.dart';
 import 'package:device_monitor/src/features/history/presentation/screen_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,7 +44,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProviderHome>().refreshVitals();
+      context.read<ProviderVitals>().refreshVitals();
     });
   }
 
@@ -89,7 +90,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
               colors: isDark ? AppColors.gradientDarkBackground : AppColors.gradientLightBackground,
             ),
           ),
-          child: Consumer<ProviderHome>(
+          child: Consumer<ProviderVitals>(
             builder: (context, provider, child) {
               return RefreshIndicator(
                 onRefresh: () async {
@@ -119,7 +120,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                             if (provider.error != null || provider.successMessage != null) _buildMessageBanner(provider),
 
                             // Vitals Grid
-                            if (provider.isLoading)
+                            if (provider.loading == ELoading.refreshing)
                               _buildLoadingState()
                             else if (provider.currentVitals != null)
                               _buildVitalsContent(provider, isDark, size)
@@ -139,7 +140,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHealthStatusHero(ProviderHome provider, bool isDark) {
+  Widget _buildHealthStatusHero(ProviderVitals provider, bool isDark) {
     final healthScore = _calculateHealthScore(provider);
     final healthStatus = _getHealthStatus(healthScore);
 
@@ -276,7 +277,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildVitalsContent(ProviderHome provider, bool isDark, Size size) {
+  Widget _buildVitalsContent(ProviderVitals provider, bool isDark, Size size) {
     return Column(
       children: [
         // Vitals Cards in Grid
@@ -503,7 +504,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
   }
 
   Widget _buildQuickActionCard(
-    ProviderHome provider,
+    ProviderVitals provider,
     bool isDark,
     String title,
     Function onTap,
@@ -577,7 +578,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildActionButtons(ProviderHome provider, bool isDark) {
+  Widget _buildActionButtons(ProviderVitals provider, bool isDark) {
     return Row(
       children: [
         Expanded(
@@ -611,7 +612,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: provider.isLogging
+                      onTap: provider.loading == ELoading.refreshing
                           ? null
                           : () {
                               _rotateController.forward(from: 0);
@@ -668,14 +669,14 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                //onTap: provider.isLogging ? null : () => provider.logVitals(),
+                onTap: () => provider.saveVitals(),
                 borderRadius: BorderRadius.circular(16),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (provider.isLogging)
+                      if (provider.loading == ELoading.submitButtonLoading)
                         const SizedBox(
                           width: 20,
                           height: 20,
@@ -691,7 +692,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                         ),
                       const SizedBox(width: 8),
                       Text(
-                        provider.isLogging ? 'Logging...' : 'Log Status',
+                        provider.loading == ELoading.submitButtonLoading ? 'Logging...' : 'Log Status',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -709,7 +710,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildMessageBanner(ProviderHome provider) {
+  Widget _buildMessageBanner(ProviderVitals provider) {
     final isError = provider.error != null;
     final message = isError ? provider.error! : provider.successMessage!;
     final color = isError ? AppColors.errorRed : AppColors.successGreen;
@@ -762,7 +763,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildEmptyState(ProviderHome provider) {
+  Widget _buildEmptyState(ProviderVitals provider) {
     return Center(
       child: Column(
         children: [
@@ -813,7 +814,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
   }
 
   // Helper Methods
-  double _calculateHealthScore(ProviderHome provider) {
+  double _calculateHealthScore(ProviderVitals provider) {
     if (provider.currentVitals == null) return 0;
 
     final thermal = provider.currentVitals!.thermalStatus;

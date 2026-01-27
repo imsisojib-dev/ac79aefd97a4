@@ -6,5 +6,6 @@ enum ELoading{
   fetchingList,
   submitButtonLoading,
   submitButton2Loading,
+  refreshing,
   none,
 }

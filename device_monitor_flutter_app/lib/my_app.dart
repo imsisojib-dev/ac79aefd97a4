@@ -1,7 +1,7 @@
 import 'package:device_monitor/src/core/services/navigation_service.dart';
 import 'package:device_monitor/src/core/services/token_service.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
-import 'package:device_monitor/src/features/home/presentation/providers/provider_home.dart';
+import 'package:device_monitor/src/features/vitals/presentation/providers/provider_vitals.dart';
 import 'package:flutter/material.dart';
 import 'package:device_monitor/src/config/routes/router_helper.dart';
 import 'package:device_monitor/src/config/routes/routes.dart';
@@ -25,7 +25,7 @@ Future<void> initApp()async{
       providers: [
         ChangeNotifierProvider(create: (context) => di.sl<ProviderDeviceMonitor>()),
         ChangeNotifierProvider(create: (_) => di.sl<ProviderTheme>()),
-        ChangeNotifierProvider(create: (_) => di.sl<ProviderHome>()),
+        ChangeNotifierProvider(create: (_) => di.sl<ProviderVitals>()),
       ],
       child: const MyApp(),
     ),
