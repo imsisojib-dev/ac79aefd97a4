@@ -1,6 +1,7 @@
 import 'package:device_monitor/src/core/utils/helpers/format_helper.dart';
+import 'package:equatable/equatable.dart';
 
-class RequestVitals {
+class RequestVitals extends Equatable{
   String deviceId;
   int? thermalStatus;
   int? batteryLevel;
@@ -23,5 +24,8 @@ class RequestVitals {
     data['deviceId'] = deviceId;
     return data;
   }
+
+  @override
+  List<Object?> get props => [deviceId, thermalStatus, batteryLevel, memoryUsage];
 
 }

@@ -1,4 +1,6 @@
-class VitalsEntity {
+import 'package:equatable/equatable.dart';
+
+class VitalsEntity extends Equatable{
   int? id;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -38,4 +40,7 @@ class VitalsEntity {
     data['timestamp'] = timestamp;
     return data;
   }
+
+  @override
+  List<Object?> get props => [id, thermalStatus, batteryLevel, memoryUsage];
 }
