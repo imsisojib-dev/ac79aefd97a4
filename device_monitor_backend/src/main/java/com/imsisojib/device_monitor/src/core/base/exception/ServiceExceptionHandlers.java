@@ -26,7 +26,7 @@ public class ServiceExceptionHandlers {
     @ExceptionHandler(ServiceExceptionHolder.ResourceNotFoundException.class)
     public BaseResponse handleUserNotFoundException(final ServiceExceptionHolder.ResourceNotFoundException ex) {
         log.error(ex.getMessage());
-        return BaseResponse.build(HttpStatus.NOT_FOUND).message("Resource Not Found");
+        return BaseResponse.build(HttpStatus.NOT_FOUND).message(ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

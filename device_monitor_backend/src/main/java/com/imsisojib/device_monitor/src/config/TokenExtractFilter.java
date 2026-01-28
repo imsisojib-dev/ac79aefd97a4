@@ -46,7 +46,8 @@ public class TokenExtractFilter extends OncePerRequestFilter {
     // URLs that require API key authentication instead of token
     List<String> apiKeyUrlPatterns = Arrays.asList(
             "/api/vitals/**",
-            "/api/devices/**"
+            "/api/devices/**",
+            "/api/analysis/**"
     );
 
     @Override
