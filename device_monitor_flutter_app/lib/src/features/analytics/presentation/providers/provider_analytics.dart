@@ -40,8 +40,7 @@ class ProviderAnalytics extends ChangeNotifier {
     loading = ELoading.loading;
     try {
       RequestAnalytics request = RequestAnalytics(
-        //deviceId: deviceId,
-        deviceId: "DEV00000001",
+        deviceId: deviceId,
         startDate: FormatHelper.formatDateTimeToString(DateTime.now().subtract(Duration(days: _selectedRange.days))),
         endDate: FormatHelper.formatDateTimeToString(DateTime.now()),
       );
