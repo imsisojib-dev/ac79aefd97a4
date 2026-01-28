@@ -1,32 +1,37 @@
 import 'package:device_monitor/src/config/resources/app_colors.dart';
-import 'package:device_monitor/src/config/resources/app_theme.dart';
+import 'package:device_monitor/src/core/enums/e_loading.dart';
+import 'package:device_monitor/src/features/analytics/data/enums/e_date_range.dart';
+import 'package:device_monitor/src/features/analytics/data/models/analytics_data.dart';
 import 'package:device_monitor/src/features/analytics/presentation/providers/provider_analytics.dart';
-import 'package:device_monitor/src/features/history/presentation/providers/provider_history.dart';
-import 'package:device_monitor/src/features/vitals/presentation/widgets/chart_widget.dart';
+import 'package:device_monitor/src/features/analytics/presentation/widgets/battery_drain_section.dart';
+import 'package:device_monitor/src/features/analytics/presentation/widgets/business_analysis_card.dart';
+import 'package:device_monitor/src/features/analytics/presentation/widgets/health_score_section.dart';
+import 'package:device_monitor/src/features/analytics/presentation/widgets/memory_section.dart';
+import 'package:device_monitor/src/features/analytics/presentation/widgets/overall_summary_card.dart';
+import 'package:device_monitor/src/features/analytics/presentation/widgets/period_info.dart';
+import 'package:device_monitor/src/features/analytics/presentation/widgets/thermal_section.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 class ScreenAnalytics extends StatefulWidget {
-  const ScreenAnalytics({super.key});
+  final String deviceId;
+
+  const ScreenAnalytics({
+    super.key,
+    required this.deviceId,
+  });
 
   @override
   State<ScreenAnalytics> createState() => _ScreenAnalyticsState();
 }
 
-class _ScreenAnalyticsState extends State<ScreenAnalytics> with SingleTickerProviderStateMixin {
-
+class _ScreenAnalyticsState extends State<ScreenAnalytics> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProviderAnalytics>().refresh();
+      context.read<ProviderAnalytics>().loadAnalytics(widget.deviceId);
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -34,261 +39,34 @@ class _ScreenAnalyticsState extends State<ScreenAnalytics> with SingleTickerProv
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Vitals Analytics',
+          'Analytics & Insights',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        elevation: 0,
       ),
-      body: Consumer<ProviderAnalytics>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (provider.error != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: AppColors.errorRed,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    provider.error!,
-                    style: const TextStyle(color: AppColors.errorRed),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () => provider.refresh(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: _buildAnalyticsTab(provider),
-              )
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildAnalyticsTab(ProviderAnalytics provider) {
-    if (provider.analytics == null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.insert_chart_outlined,
-              size: 64,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
-            ),
-            const SizedBox(height: 16),
-            const Text('No analytics data available'),
-            const SizedBox(height: 8),
-            const Text(
-              'Log some vitals to see analytics',
-              style: TextStyle(fontSize: 12),
-            ),
-          ],
-        ),
-      );
-    }
-
-    final analytics = provider.analytics!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return RefreshIndicator(
-      onRefresh: () => provider.refresh(),
-      child: ListView(
-        padding: const EdgeInsets.all(16),
+      body: Column(
         children: [
-          // Summary Cards
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.analytics,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Rolling Average (Last 10 Entries)',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  _buildMetricRow(
-                    'Thermal State',
-                    analytics.avgThermal.toStringAsFixed(1),
-                    AppTheme.getThermalColor(analytics.avgThermal.round(), isDark),
-                    Icons.thermostat,
-                  ),
-                  const Divider(height: 24),
-                  _buildMetricRow(
-                    'Battery Level',
-                    '${analytics.avgBattery.toStringAsFixed(1)}%',
-                    AppColors.successGreen,
-                    Icons.battery_charging_full,
-                  ),
-                  const Divider(height: 24),
-                  _buildMetricRow(
-                    'Memory Usage',
-                    '${analytics.avgMemory.toStringAsFixed(1)}%',
-                    AppColors.infoBlue,
-                    Icons.memory,
-                  ),
-                  const Divider(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Total Entries',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      Text(
-                        '${analytics.totalEntries}',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
+          // Date Range Selector
+          _buildDateRangeSelector(),
 
-          // Battery Chart
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Battery Level Trend',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Min: ${analytics.minBattery.toInt()}% | Max: ${analytics.maxBattery.toInt()}%',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  // SizedBox(
-                  //   height: 200,
-                  //   child: ChartWidget(
-                  //     data: provider.logs.reversed.take(20).toList().reversed.map((log) => log.batteryLevel.toDouble()).toList(),
-                  //     color: AppColors.successGreen,
-                  //     gradientColor: AppColors.lightGreen,
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
+          // Content
+          Expanded(
+            child: Consumer<ProviderAnalytics>(
+              builder: (context, provider, child) {
+                if (provider.loading==ELoading.loading) {
+                  return _buildLoadingState();
+                }
 
-          // Memory Chart
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Memory Usage Trend',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Min: ${analytics.minMemory.toInt()}% | Max: ${analytics.maxMemory.toInt()}%',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  // SizedBox(
-                  //   height: 200,
-                  //   child: ChartWidget(
-                  //     data: provider.logs.reversed.take(20).toList().reversed.map((log) => log.memoryUsage.toDouble()).toList(),
-                  //     color: AppColors.infoBlue,
-                  //     gradientColor: const Color(0xFF60A5FA),
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
+                if (provider.error != null) {
+                  return _buildErrorState(provider);
+                }
 
-          // Thermal Chart
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Thermal State Trend',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // SizedBox(
-                  //   height: 200,
-                  //   child: ChartWidget(
-                  //     data: provider.logs.reversed.take(20).toList().reversed.map((log) => log.thermalValue.toDouble()).toList(),
-                  //     color: AppColors.warningAmber,
-                  //     gradientColor: const Color(0xFFFBBF24),
-                  //     maxY: 3,
-                  //   ),
-                  // ),
-                ],
-              ),
+                if (provider.analyticsData == null) {
+                  return _buildEmptyState();
+                }
+
+                return _buildAnalyticsContent(provider.analyticsData!);
+              },
             ),
           ),
         ],
@@ -296,47 +74,176 @@ class _ScreenAnalyticsState extends State<ScreenAnalytics> with SingleTickerProv
     );
   }
 
-  Widget _buildMetricRow(String label, String value, Color color, IconData icon) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 20, color: color),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(fontSize: 14),
-            ),
-          ],
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: color,
+  Widget _buildDateRangeSelector() {
+    return Consumer<ProviderAnalytics>(
+      builder: (context, provider, child) {
+        return Container(
+          height: 50,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ),
-      ],
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: EDateRange.values.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final range = EDateRange.values[index];
+              final isSelected = provider.selectedRange == range;
+
+              return GestureDetector(
+                onTap: () => provider.selectDateRange(range),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.primaryGreen : Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isSelected ? AppColors.primaryGreen : Theme.of(context).dividerColor,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      range.label,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: isSelected ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildChip(String label, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(8),
+  Widget _buildAnalyticsContent(AnalyticsData data) {
+    return RefreshIndicator(
+      onRefresh: () => context.read<ProviderAnalytics>().loadAnalytics(widget.deviceId),
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  // Period Info
+                  PeriodInfo(period: data.analyzedPeriod),
+                  const SizedBox(height: 16),
+
+                  // Overall Summary Card
+                  OverallSummaryCard(summary: data.overallSummary),
+
+                  const SizedBox(height: 24),
+
+                  // Analysis Sections
+                  ...data.analyses.map((analysis) {
+                    switch (analysis.type) {
+                      case 'DEVICE_HEALTH_SCORE':
+                        return HealthScoreSection(analysis: analysis);
+                      case 'BATTERY_DRAIN_ANALYSIS':
+                        return BatteryDrainSection(analysis: analysis);
+                      case 'THERMAL_THROTTLING_ALERTS':
+                        return ThermalSection(analysis: analysis);
+                      case 'MEMORY_PRESSURE_INSIGHTS':
+                        return MemorySection(analysis: analysis);
+                      default:
+                        return BusinessAnalysisCard(
+                          analysis: analysis,
+                          child: const SizedBox(),
+                        );
+                    }
+                  }).toList(),
+                ],
+              ),
+            ),
+          )
+        ],
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 11,
-          color: color,
-          fontWeight: FontWeight.w600,
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text('Loading analytics...'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(ProviderAnalytics provider) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: AppColors.errorRed,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              provider.error!,
+              style: const TextStyle(color: AppColors.errorRed),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () => provider.loadAnalytics(widget.deviceId),
+              child: const Text('Retry'),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.analytics_outlined,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'No analytics data available',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
 }

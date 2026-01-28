@@ -336,7 +336,11 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                 isDark,
                 "View\nAnalytics",
                 () {
-                  Navigator.pushNamed(context, Routes.historyScreen);
+                  Navigator.pushNamed(
+                    context,
+                    Routes.analyticsScreen,
+                    arguments: context.read<ProviderDeviceMonitor>().currentDevice?.deviceId,
+                  );
                 },
               ),
             ),

@@ -171,6 +171,91 @@ class WidgetHelper {
     return AppColors.errorRed;
   }
 
+  static Color getConditionColor(String condition) {
+    switch (condition.toUpperCase()) {
+      case 'EXCELLENT':
+        return AppColors.successGreen;
+      case 'GOOD':
+        return AppColors.infoBlue;
+      case 'NEEDS_ATTENTION':
+        return AppColors.warningAmber;
+      case 'CRITICAL':
+        return AppColors.errorRed;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  static IconData getConditionIcon(String condition) {
+    switch (condition.toUpperCase()) {
+      case 'EXCELLENT':
+        return Icons.verified;
+      case 'GOOD':
+        return Icons.check_circle;
+      case 'NEEDS_ATTENTION':
+        return Icons.warning_amber_rounded;
+      case 'CRITICAL':
+        return Icons.error;
+      default:
+        return Icons.help;
+    }
+  }
+
+  static Color getSeverityColor(String severity) {
+    switch (severity.toUpperCase()) {
+      case 'LOW':
+        return AppColors.successGreen;
+      case 'MEDIUM':
+        return AppColors.warningAmber;
+      case 'HIGH':
+        return AppColors.errorRed;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  static Color getBatteryDrainColor(int drain) {
+    if (drain <= 15) return AppColors.successGreen;
+    if (drain <= 25) return AppColors.infoBlue;
+    if (drain <= 35) return AppColors.warningAmber;
+    return AppColors.errorRed;
+  }
+
+  static IconData getPeriodIcon(String period) {
+    if (period.contains('Morning')) return Icons.wb_sunny;
+    if (period.contains('Afternoon')) return Icons.wb_twilight;
+    if (period.contains('Evening')) return Icons.nights_stay;
+    return Icons.access_time;
+  }
+
+  static Color getHealthScoreColor(int score) {
+    if (score >= 80) return AppColors.successGreen;
+    if (score >= 60) return AppColors.infoBlue;
+    if (score >= 40) return AppColors.warningAmber;
+    return AppColors.errorRed;
+  }
+
+  static Widget buildLegendItem(String label, int count, Color color) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          '$label ($count)',
+          style: const TextStyle(fontSize: 12),
+        ),
+      ],
+    );
+  }
+
 }
 
 class _BlurryDialog extends StatelessWidget {

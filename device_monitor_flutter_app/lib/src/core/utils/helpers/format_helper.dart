@@ -15,4 +15,23 @@ class FormatHelper {
     return DateFormat("yyyy-MM-dd'T'HH:mm:ss").format(dateTime);
   }
 
+  static String formatDateTimeToString(DateTime dateTime) {
+    return DateFormat("yyyy-MM-dd").format(dateTime);
+  }
+
+  static String formatCondition(String condition) {
+    return condition.replaceAll('_', ' ').split(' ').map((word) {
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(' ');
+  }
+
+  static String formatDate(String dateStr) {
+    try {
+      final date = DateTime.parse(dateStr);
+      return DateFormat('MMM dd, yyyy').format(date);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
 }

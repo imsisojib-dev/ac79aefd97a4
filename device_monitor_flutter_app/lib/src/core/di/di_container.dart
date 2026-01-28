@@ -5,6 +5,8 @@ import 'package:device_monitor/src/core/services/api_interceptor.dart';
 import 'package:device_monitor/src/core/services/device_vitals_service.dart';
 import 'package:device_monitor/src/core/services/navigation_service.dart';
 import 'package:device_monitor/src/core/services/token_service.dart';
+import 'package:device_monitor/src/features/analytics/data/repositories/repository_analytics.dart';
+import 'package:device_monitor/src/features/analytics/domain/interfaces/i_repository_analytics.dart';
 import 'package:device_monitor/src/features/analytics/presentation/providers/provider_analytics.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
 import 'package:device_monitor/src/features/device/data/repositories/repository_device.dart';
@@ -32,6 +34,7 @@ Future<void> init() async {
   sl.registerLazySingleton<ICacheRepository>(() => CacheRepositoryImpl(sharedPreference: sl()));
   sl.registerLazySingleton<IRepositoryDevice>(() => RepositoryDevice(apiInterceptor: sl(), tokenService: sl()));
   sl.registerLazySingleton<IRepositoryVitals>(() => RepositoryVitals(apiInterceptor: sl(), tokenService: sl()));
+  sl.registerLazySingleton<IRepositoryAnalytics>(() => RepositoryAnalytics(apiInterceptor: sl(), tokenService: sl()));
   //#endregion
 
   ///PROVIDERS

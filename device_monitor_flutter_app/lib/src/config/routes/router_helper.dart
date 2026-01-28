@@ -40,9 +40,18 @@ class RouterHelper {
   });
 
   static final Handler _analyticsScreenHandler = Handler(handlerFunc: (context, Map<String, dynamic> parameters) {
+    String? deviceId = ModalRoute.of(context!)!.settings.arguments as String?;
+    if (deviceId?.isEmpty ?? true) {
+      return ScreenError(
+        message: 'Device id is missing!',
+      );
+    }
+
     return ChangeNotifierProvider(
       create: (_) => sl<ProviderAnalytics>(),
-      child: const ScreenAnalytics(),
+      child: ScreenAnalytics(
+        deviceId: deviceId!,
+      ),
     );
   });
 
