@@ -1,31 +1,17 @@
-// lib/theme/app_theme.dart
+import 'package:device_monitor/src/config/resources/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Green color palette
-  static const Color primaryGreen = Color(0xFF10B981); // Emerald-500
-  static const Color darkGreen = Color(0xFF059669); // Emerald-600
-  static const Color lightGreen = Color(0xFF34D399); // Emerald-400
-  static const Color veryLightGreen = Color(0xFFD1FAE5); // Emerald-100
-
-  static const Color secondaryTeal = Color(0xFF14B8A6); // Teal-500
-  static const Color accentLime = Color(0xFF84CC16); // Lime-500
-
-  // Status colors
-  static const Color successGreen = Color(0xFF22C55E); // Green-500
-  static const Color warningAmber = Color(0xFFF59E0B); // Amber-500
-  static const Color errorRed = Color(0xFFEF4444); // Red-500
-  static const Color infoBlue = Color(0xFF3B82F6); // Blue-500
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
-      primary: primaryGreen,
-      secondary: secondaryTeal,
+      primary: AppColors.primaryGreen,
+      secondary: AppColors.secondaryTeal,
       surface: Colors.white,
       background: const Color(0xFFF0FDF4), // Green-50
-      error: errorRed,
+      error: AppColors.errorRed,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
       onSurface: const Color(0xFF1F2937), // Gray-800
@@ -37,7 +23,7 @@ class AppTheme {
       centerTitle: true,
       backgroundColor: Colors.white,
       foregroundColor: Color(0xFF1F2937),
-      iconTheme: IconThemeData(color: primaryGreen),
+      iconTheme: IconThemeData(color: AppColors.primaryGreen),
     ),
     cardTheme: CardThemeData(
       elevation: 2,
@@ -46,7 +32,7 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: primaryGreen,
+        backgroundColor: AppColors.primaryGreen,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -54,12 +40,12 @@ class AppTheme {
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: primaryGreen,
+      backgroundColor: AppColors.primaryGreen,
       foregroundColor: Colors.white,
       elevation: 4,
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: primaryGreen,
+      color: AppColors.primaryGreen,
     ),
   );
 
@@ -67,11 +53,11 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(
-      primary: lightGreen,
-      secondary: secondaryTeal,
+      primary: AppColors.lightGreen,
+      secondary: AppColors.secondaryTeal,
       surface: const Color(0xFF1F2937), // Gray-800
       background: const Color(0xFF111827), // Gray-900
-      error: errorRed,
+      error: AppColors.errorRed,
       onPrimary: const Color(0xFF0F172A), // Slate-900
       onSecondary: Colors.white,
       onSurface: const Color(0xFFF9FAFB), // Gray-50
@@ -83,7 +69,7 @@ class AppTheme {
       centerTitle: true,
       backgroundColor: Color(0xFF1F2937), // Gray-800
       foregroundColor: Color(0xFFF9FAFB),
-      iconTheme: IconThemeData(color: lightGreen),
+      iconTheme: IconThemeData(color: AppColors.lightGreen),
     ),
     cardTheme: CardThemeData(
       elevation: 4,
@@ -92,7 +78,7 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: lightGreen,
+        backgroundColor: AppColors.lightGreen,
         foregroundColor: const Color(0xFF0F172A),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -100,12 +86,12 @@ class AppTheme {
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: lightGreen,
+      backgroundColor: AppColors.lightGreen,
       foregroundColor: Color(0xFF0F172A),
       elevation: 4,
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: lightGreen,
+      color: AppColors.lightGreen,
     ),
   );
 
@@ -113,13 +99,13 @@ class AppTheme {
   static Color getThermalColor(int thermalValue, bool isDark) {
     switch (thermalValue) {
       case 0:
-        return isDark ? const Color(0xFF34D399) : successGreen; // None - Green
+        return isDark ? const Color(0xFF34D399) : AppColors.successGreen; // None - Green
       case 1:
-        return isDark ? const Color(0xFF60A5FA) : infoBlue; // Light - Blue
+        return isDark ? const Color(0xFF60A5FA) : AppColors.infoBlue; // Light - Blue
       case 2:
-        return isDark ? const Color(0xFFFBBF24) : warningAmber; // Moderate - Amber
+        return isDark ? const Color(0xFFFBBF24) : AppColors.warningAmber; // Moderate - Amber
       case 3:
-        return isDark ? const Color(0xFFF87171) : errorRed; // Severe - Red
+        return isDark ? const Color(0xFFF87171) : AppColors.errorRed; // Severe - Red
       default:
         return isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
     }

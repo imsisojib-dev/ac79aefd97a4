@@ -1,27 +1,27 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
-
+import 'dart:io';
 
 class ConnectivityHelper{
+  //Best approach - Try multiple hosts for redundancy
   static Future<bool> hasInternetConnection() async {
-    /*try {
-      final result = await InternetAddress.lookup('https://www.google.com');
-      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-    } on SocketException catch (_) {
-      return false;
-    }*/
+    final hosts = [
+      'google.com',
+      'cloudflare.com',
+    ];
 
-    try{
-      var connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult == ConnectivityResult.mobile || connectivityResult ==ConnectivityResult.wifi || connectivityResult ==ConnectivityResult.ethernet) {
-        // I am connected to a mobile network.
-        return true;
-      }else{
-        return false;
+    for (final host in hosts) {
+      try {
+        final result = await InternetAddress.lookup(host)
+            .timeout(const Duration(seconds: 3));
+
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          return true;
+        }
+      } catch (e) {
+        // Try next host
+        continue;
       }
-    }catch(e){
-      //by default returning 'true' to avoid platform specific errors and also using in Unit-Testing
-      return true;
     }
 
+    return false;
   }
 }

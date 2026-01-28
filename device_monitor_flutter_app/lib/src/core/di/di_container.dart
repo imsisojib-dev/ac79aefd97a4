@@ -1,12 +1,19 @@
-import 'package:device_monitor/src/config/app_config.dart';
-import 'package:device_monitor/src/config/env.dart';
-import 'package:device_monitor/src/core/application/api_interceptor.dart';
-import 'package:device_monitor/src/core/application/navigation_service.dart';
-import 'package:device_monitor/src/core/application/token_service.dart';
 import 'package:device_monitor/src/core/data/repositories/cache_repository_impl.dart';
 import 'package:device_monitor/src/core/domain/interfaces/interface_api_interceptor.dart';
 import 'package:device_monitor/src/core/domain/interfaces/interface_cache_repository.dart';
-import 'package:device_monitor/src/features/home/presentation/providers/provider_common.dart';
+import 'package:device_monitor/src/core/services/api_interceptor.dart';
+import 'package:device_monitor/src/core/services/device_vitals_service.dart';
+import 'package:device_monitor/src/core/services/navigation_service.dart';
+import 'package:device_monitor/src/core/services/token_service.dart';
+import 'package:device_monitor/src/features/analytics/presentation/providers/provider_analytics.dart';
+import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
+import 'package:device_monitor/src/features/device/data/repositories/repository_device.dart';
+import 'package:device_monitor/src/features/device/domain/interfaces/i_repository_device.dart';
+import 'package:device_monitor/src/features/device/presentation/providers/provider_device_monitor.dart';
+import 'package:device_monitor/src/features/history/presentation/providers/provider_history.dart';
+import 'package:device_monitor/src/features/vitals/data/repopsitories/repository_vitals.dart';
+import 'package:device_monitor/src/features/vitals/domain/interfaces/i_repository_vitals.dart';
+import 'package:device_monitor/src/features/vitals/presentation/providers/provider_vitals.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,23 +30,25 @@ Future<void> init() async {
   ///REPOSITORIES
   //#region Repositories
   sl.registerLazySingleton<ICacheRepository>(() => CacheRepositoryImpl(sharedPreference: sl()));
+  sl.registerLazySingleton<IRepositoryDevice>(() => RepositoryDevice(apiInterceptor: sl(), tokenService: sl()));
+  sl.registerLazySingleton<IRepositoryVitals>(() => RepositoryVitals(apiInterceptor: sl(), tokenService: sl()));
   //#endregion
-
-  ///USE-CASES
-
-
-  ///END of USE-CASES
 
   ///PROVIDERS
   //region Providers
-  sl.registerFactory(() => ProviderCommon(),);
+  sl.registerFactory(() => ProviderDeviceMonitor(),);
+  sl.registerFactory(() => ProviderTheme(),);
+  sl.registerFactory(() => ProviderVitals(),);
+  sl.registerFactory(() => ProviderHistory(),);
+  sl.registerFactory(() => ProviderAnalytics(),);
 
   //interceptors
-  sl.registerLazySingleton<IApiInterceptor>(() => ApiInterceptor(baseUrl: Env.baseUrl));
+  sl.registerLazySingleton<IApiInterceptor>(() => ApiInterceptor());
 
   ///services
-  sl.registerSingleton(NavigationService());  //to initialize navigator-key for app-runtime
-  sl.registerSingleton(TokenService()); //token service to store token app-runtime
+  sl.registerSingleton(DeviceVitalsService());
+  sl.registerSingleton(NavigationService());  //to initialize navigator-key for common-runtime
+  sl.registerSingleton(TokenService()); //token service to store token common-runtime
   //logger
   sl.registerLazySingleton(()=>Logger(
     printer: PrettyPrinter(

@@ -1,4 +1,4 @@
-import 'package:device_monitor/src/core/domain/entities/device_vitals.dart';
+import 'package:device_monitor/src/features/vitals/domain/entities/vitals_entity.dart';
 import 'package:device_monitor/src/core/utils/helpers/debugger_helper.dart';
 import 'package:flutter/services.dart';
 
@@ -62,12 +62,12 @@ class DeviceVitalsService {
     }
   }
 
-  Future<DeviceVitals> getAllVitals() async {
+  Future<VitalsEntity> getAllVitals() async {
     final thermal = await getThermalStatus();
     final battery = await getBatteryLevel();
     final memory = await getMemoryUsage();
 
-    return DeviceVitals(
+    return VitalsEntity(
       thermalStatus: thermal,
       batteryLevel: battery,
       memoryUsage: memory,

@@ -1,0 +1,1 @@
+enum EDialogType{  success,  warning,  error}

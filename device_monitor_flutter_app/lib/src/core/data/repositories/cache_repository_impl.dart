@@ -32,4 +32,14 @@ class CacheRepositoryImpl implements ICacheRepository{
     await sharedPreference.setString('key_app_session_token', '');
   }
 
+  @override
+  String? fetchDeviceEntityJson() {
+    return sharedPreference.getString('key_device_entity_json');
+  }
+
+  @override
+  Future<void> saveDeviceEntityJson(String encodedData) async {
+    await sharedPreference.setString('key_device_entity_json', encodedData);
+  }
+
 }
