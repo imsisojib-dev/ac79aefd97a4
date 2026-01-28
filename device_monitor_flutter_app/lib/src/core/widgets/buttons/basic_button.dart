@@ -21,7 +21,7 @@ class BasicButton extends StatelessWidget {
     super.key,
     this.width,
     this.height = 50,
-    this.backgroundColor = AppColors.primaryColorLight,
+    this.backgroundColor = AppColors.primaryGreen,
     this.onPressed,
     this.suffix,
     this.prefix,

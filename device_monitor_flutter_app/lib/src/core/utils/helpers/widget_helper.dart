@@ -64,7 +64,7 @@ class WidgetHelper {
         return _BlurryDialog(
           alertDialog: AlertDialog(
             surfaceTintColor: Colors.white,
-            backgroundColor: popupBackgroundColor ?? Colors.white,
+            backgroundColor: popupBackgroundColor ?? theme.colorScheme.surface,
             shadowColor: AppColors.secondaryColorLight.withOpacity(.7),
             elevation: 7,
             //backgroundColor: Colors.white,
@@ -128,9 +128,7 @@ class WidgetHelper {
                   message,
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondaryColorLight,
-                  ),
+                  style: theme.textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
