@@ -12,7 +12,7 @@ class ProviderAnalytics extends ChangeNotifier {
   late String _deviceId;
   ELoading? _loading;
   String? _error;
-  EDateRange _selectedRange = EDateRange.oneDay;
+  EDateRange _selectedRange = EDateRange.oneMonth;
 
   AnalyticsData? get analyticsData => _analyticsData;
 

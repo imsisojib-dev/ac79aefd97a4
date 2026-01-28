@@ -6,6 +6,7 @@ import 'package:device_monitor/src/core/utils/helpers/format_helper.dart';
 import 'package:device_monitor/src/core/utils/helpers/widget_helper.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
 import 'package:device_monitor/src/features/device/presentation/providers/provider_device_monitor.dart';
+import 'package:device_monitor/src/features/home/presentation/widgets/app_drawer.dart';
 import 'package:device_monitor/src/features/home/presentation/widgets/modern_vital_card.dart';
 import 'package:device_monitor/src/features/vitals/presentation/providers/provider_vitals.dart';
 import 'package:device_monitor/src/features/history/presentation/screen_history.dart';
@@ -84,6 +85,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
           ),
         ],
       ),
+      drawer: AppDrawer(),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
