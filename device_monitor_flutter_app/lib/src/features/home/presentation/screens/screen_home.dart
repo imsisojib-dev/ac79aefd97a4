@@ -2,14 +2,15 @@ import 'package:device_monitor/src/config/resources/app_colors.dart';
 import 'package:device_monitor/src/config/resources/app_theme.dart';
 import 'package:device_monitor/src/config/routes/routes.dart';
 import 'package:device_monitor/src/core/enums/e_loading.dart';
+import 'package:device_monitor/src/core/utils/helpers/calculation_helper.dart';
 import 'package:device_monitor/src/core/utils/helpers/format_helper.dart';
 import 'package:device_monitor/src/core/utils/helpers/widget_helper.dart';
 import 'package:device_monitor/src/features/common/presentation/providers/provider_theme.dart';
 import 'package:device_monitor/src/features/device/presentation/providers/provider_device_monitor.dart';
 import 'package:device_monitor/src/features/home/presentation/widgets/app_drawer.dart';
+import 'package:device_monitor/src/features/home/presentation/widgets/health_score_painter.dart';
 import 'package:device_monitor/src/features/home/presentation/widgets/modern_vital_card.dart';
 import 'package:device_monitor/src/features/vitals/presentation/providers/provider_vitals.dart';
-import 'package:device_monitor/src/features/history/presentation/screen_history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -142,12 +143,29 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
           ),
         ),
       ),
+      bottomNavigationBar: SizedBox(
+        height: 120,
+        child: Consumer<ProviderVitals>(builder: (_, vitalsProvider, child) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Action Buttons
+                _buildActionButtons(vitalsProvider, isDark),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 
   Widget _buildHealthStatusHero(ProviderVitals provider, bool isDark) {
-    final healthScore = _calculateHealthScore(provider);
-    final healthStatus = _getHealthStatus(healthScore);
+    final healthScore = CalculationHelper.calculateHealthScore(provider.currentVitals);
+    final healthStatus = WidgetHelper.getHealthStatus(healthScore);
 
     return AnimatedBuilder(
       animation: _pulseAnimation,
@@ -195,7 +213,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                       child: CustomPaint(
                         painter: HealthScorePainter(
                           score: provider.currentVitals != null ? healthScore : 0,
-                          color: _getHealthColor(healthScore),
+                          color: WidgetHelper.getHealthColor(healthScore),
                           isDark: isDark,
                         ),
                       ),
@@ -206,7 +224,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                         Icon(
                           Icons.favorite,
                           size: 28.h,
-                          color: _getHealthColor(healthScore),
+                          color: WidgetHelper.getHealthColor(healthScore),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -214,7 +232,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                           style: TextStyle(
                             fontSize: 32.sp,
                             fontWeight: FontWeight.bold,
-                            color: _getHealthColor(healthScore),
+                            color: WidgetHelper.getHealthColor(healthScore),
                           ),
                         ),
                         Text(
@@ -237,10 +255,10 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: _getHealthColor(healthScore).withOpacity(0.15),
+                    color: WidgetHelper.getHealthColor(healthScore).withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: _getHealthColor(healthScore).withOpacity(0.5),
+                      color: WidgetHelper.getHealthColor(healthScore).withOpacity(0.5),
                     ),
                   ),
                   child: Row(
@@ -248,7 +266,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                     children: [
                       Icon(
                         WidgetHelper.getHealthIcon(healthScore),
-                        color: _getHealthColor(healthScore),
+                        color: WidgetHelper.getHealthColor(healthScore),
                         size: 20,
                       ),
                       const SizedBox(width: 8),
@@ -257,7 +275,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: _getHealthColor(healthScore),
+                          color: WidgetHelper.getHealthColor(healthScore),
                         ),
                       ),
                     ],
@@ -367,152 +385,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
         ),
 
         const SizedBox(height: 24),
-
-        // Action Buttons
-        _buildActionButtons(provider, isDark),
       ],
-    );
-  }
-
-  Widget _buildModernVitalCard({
-    required String title,
-    required String value,
-    required String label,
-    required IconData icon,
-    required Color color,
-    required int percentage,
-    required bool isDark,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  color.withOpacity(0.15),
-                  color.withOpacity(0.05),
-                ]
-              : [
-                  Colors.white,
-                  color.withOpacity(0.05),
-                ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Icon and Title
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 16),
-            ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //
-            //     // Container(
-            //     //   padding: const EdgeInsets.symmetric(
-            //     //     horizontal: 8,
-            //     //     vertical: 4,
-            //     //   ),
-            //     //   decoration: BoxDecoration(
-            //     //     color: color.withOpacity(0.15),
-            //     //     borderRadius: BorderRadius.circular(8),
-            //     //   ),
-            //     //   child: Text(
-            //     //     title,
-            //     //     style: TextStyle(
-            //     //       fontSize: 11,
-            //     //       fontWeight: FontWeight.w600,
-            //     //       color: color,
-            //     //     ),
-            //     //   ),
-            //     // ),
-            //   ],
-            // ),
-            const Spacer(),
-
-            // Value
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 32.sp,
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                    height: 1,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: color.withOpacity(0.7),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            // Progress Bar
-            Stack(
-              children: [
-                Container(
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-                FractionallySizedBox(
-                  widthFactor: (percentage / 100).clamp(0.0, 1.0),
-                  child: Container(
-                    height: 6,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [color, color.withOpacity(0.6)],
-                      ),
-                      borderRadius: BorderRadius.circular(3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: color.withOpacity(0.5),
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -594,74 +467,30 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
   Widget _buildActionButtons(ProviderVitals provider, bool isDark) {
     return Row(
       children: [
-        Expanded(
-          child: AnimatedBuilder(
-            animation: _rotateController,
-            builder: (context, child) {
-              return Transform.rotate(
-                angle: _rotateController.value * 2 * math.pi,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    gradient: LinearGradient(
-                      colors: isDark
-                          ? [
-                              const Color(0xFF374151),
-                              const Color(0xFF1F2937),
-                            ]
-                          : [
-                              Colors.white,
-                              const Color(0xFFF9FAFB),
-                            ],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: provider.loading == ELoading.refreshing
-                          ? null
-                          : () {
-                              _rotateController.forward(from: 0);
-                              provider.refreshVitals();
-                            },
-                      borderRadius: BorderRadius.circular(16),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.refresh_rounded,
-                              color: AppColors.primaryGreen,
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'Refresh',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryGreen,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+        AnimatedBuilder(
+          animation: _rotateController,
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: _rotateController.value * 2 * math.pi,
+              child: GestureDetector(
+                onTap: provider.loading == ELoading.refreshing
+                    ? null
+                    : () {
+                  _rotateController.forward(from: 0);
+                  provider.refreshVitals();
+                },
+                child: CircleAvatar(
+                  child: Icon(
+                    Icons.refresh_rounded,
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
         const SizedBox(width: 16),
         Expanded(
+          flex: 3,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
@@ -685,7 +514,7 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
                 onTap: () => provider.saveVitals(),
                 borderRadius: BorderRadius.circular(16),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -826,84 +655,5 @@ class _ScreenHomeState extends State<ScreenHome> with TickerProviderStateMixin {
     );
   }
 
-  // Helper Methods
-  double _calculateHealthScore(ProviderVitals provider) {
-    if (provider.currentVitals == null) return 0;
-
-    final thermal = provider.currentVitals!.thermalStatus;
-    final battery = provider.currentVitals!.batteryLevel;
-    final memory = provider.currentVitals!.memoryUsage;
-
-    // Scoring logic (0-100)
-    double thermalScore = (3 - thermal) / 3 * 100; // Lower thermal is better
-    double batteryScore = battery.toDouble(); // Higher battery is better
-    double memoryScore = (100 - memory).toDouble(); // Lower memory usage is better
-
-    return (thermalScore * 0.3 + batteryScore * 0.4 + memoryScore * 0.3);
-  }
-
-  String _getHealthStatus(double score) {
-    if (score >= 80) return 'Excellent';
-    if (score >= 60) return 'Good';
-    if (score >= 40) return 'Fair';
-    if (score >= 20) return 'Poor';
-    return 'Critical';
-  }
-
-  Color _getHealthColor(double score) {
-    if (score >= 80) return AppColors.successGreen;
-    if (score >= 60) return AppColors.infoBlue;
-    if (score >= 40) return AppColors.warningAmber;
-    return AppColors.errorRed;
-  }
 }
 
-// Custom Painter for Health Score Circle
-class HealthScorePainter extends CustomPainter {
-  final double score;
-  final Color color;
-  final bool isDark;
-
-  HealthScorePainter({
-    required this.score,
-    required this.color,
-    required this.isDark,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
-
-    // Background circle
-    final bgPaint = Paint()
-      ..color = color.withOpacity(isDark ? 0.1 : 0.15)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 12;
-
-    canvas.drawCircle(center, radius - 6, bgPaint);
-
-    // Progress arc
-    final progressPaint = Paint()
-      ..shader = SweepGradient(
-        colors: [color, color.withOpacity(0.5)],
-        startAngle: -math.pi / 2,
-        endAngle: math.pi * 3 / 2,
-      ).createShader(Rect.fromCircle(center: center, radius: radius))
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 12
-      ..strokeCap = StrokeCap.round;
-
-    final sweepAngle = (score / 100) * 2 * math.pi;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - 6),
-      -math.pi / 2,
-      sweepAngle,
-      false,
-      progressPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}

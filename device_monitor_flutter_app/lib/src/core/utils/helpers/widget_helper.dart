@@ -233,6 +233,21 @@ class WidgetHelper {
     return AppColors.errorRed;
   }
 
+  static Color getHealthColor(double score) {
+    if (score >= 80) return AppColors.successGreen;
+    if (score >= 60) return AppColors.infoBlue;
+    if (score >= 40) return AppColors.warningAmber;
+    return AppColors.errorRed;
+  }
+
+  static String getHealthStatus(double score) {
+    if (score >= 80) return 'Excellent';
+    if (score >= 60) return 'Good';
+    if (score >= 40) return 'Fair';
+    if (score >= 20) return 'Poor';
+    return 'Critical';
+  }
+
   static Widget buildLegendItem(String label, int count, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
