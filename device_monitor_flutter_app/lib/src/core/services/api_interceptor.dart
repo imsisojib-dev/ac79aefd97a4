@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:convert';
 import 'package:device_monitor/src/core/domain/interfaces/interface_api_interceptor.dart';
 import 'package:device_monitor/src/core/utils/helpers/connectivity_helper.dart';
@@ -7,6 +9,9 @@ import 'package:http/http.dart' as http;
 class ApiInterceptor implements IApiInterceptor {
   final Map<String, dynamic> _serverTimeoutResponse = {"statusCode": 408, "message": "Server is not responding. Please try again later."};
   final Map<String, dynamic> _noInternetResponse = {"statusCode": 503, "message": "No Internet Connection! Please check your internet connection."};
+  final Map<String, dynamic> _serverConnectionError = {"statusCode": 503, "message": "Couldn't connect with server. Server may be down or please check your internet connection."};
+  final Map<String, dynamic> _badResponseException = {"statusCode": 500, "message": "Bad response from server."};
+  final Map<String, dynamic> _unexpectedException = {"statusCode": 404, "message": "Unexpected error! Something is went wrong."};
 
   ApiInterceptor();
 
@@ -40,9 +45,19 @@ class ApiInterceptor implements IApiInterceptor {
       );
 
       return response;
-    } catch (e) {
-      Debugger.error(title: 'ApiInterceptor.get()', data: e);
-      return http.Response('$e', 500);
+    }
+    on TimeoutException catch (_) {
+      return http.Response(jsonEncode(_serverTimeoutResponse), 500);
+    }
+    on SocketException catch (_) {
+      return http.Response(jsonEncode(_serverConnectionError), 503);
+    }
+    on HttpException catch (_) {
+      return http.Response(jsonEncode(_badResponseException), 500);
+    }
+    catch (e) {
+      Debugger.error(title: 'ApiInterceptor.get()', data: e,);
+      return http.Response(jsonEncode(_unexpectedException), 404);
     }
   }
 
@@ -74,9 +89,18 @@ class ApiInterceptor implements IApiInterceptor {
         statusCode: response.statusCode,
       );
       return response;
-    } catch (e) {
-      Debugger.error(title: 'ApiInterceptor.post()', data: e);
-      return http.Response('$e', 500);
+    } on TimeoutException catch (_) {
+      return http.Response(jsonEncode(_serverTimeoutResponse), 500);
+    }
+    on SocketException catch (_) {
+      return http.Response(jsonEncode(_serverConnectionError), 503);
+    }
+    on HttpException catch (_) {
+      return http.Response(jsonEncode(_badResponseException), 500);
+    }
+    catch (e) {
+      Debugger.error(title: 'ApiInterceptor.get()', data: e,);
+      return http.Response(jsonEncode(_unexpectedException), 404);
     }
   }
 
@@ -109,9 +133,19 @@ class ApiInterceptor implements IApiInterceptor {
       );
 
       return response;
-    } catch (e) {
-      Debugger.error(title: 'ApiInterceptor.post()', data: e);
-      return http.Response('$e', 500);
+    }
+    on TimeoutException catch (_) {
+      return http.Response(jsonEncode(_serverTimeoutResponse), 500);
+    }
+    on SocketException catch (_) {
+      return http.Response(jsonEncode(_serverConnectionError), 503);
+    }
+    on HttpException catch (_) {
+      return http.Response(jsonEncode(_badResponseException), 500);
+    }
+    catch (e) {
+      Debugger.error(title: 'ApiInterceptor.get()', data: e,);
+      return http.Response(jsonEncode(_unexpectedException), 404);
     }
   }
 
@@ -143,9 +177,19 @@ class ApiInterceptor implements IApiInterceptor {
         statusCode: response.statusCode,
       );
       return response;
-    } catch (e) {
-      Debugger.error(title: 'ApiInterceptor.post()', data: e);
-      return http.Response('$e', 500);
+    }
+    on TimeoutException catch (_) {
+      return http.Response(jsonEncode(_serverTimeoutResponse), 500);
+    }
+    on SocketException catch (_) {
+      return http.Response(jsonEncode(_serverConnectionError), 503);
+    }
+    on HttpException catch (_) {
+      return http.Response(jsonEncode(_badResponseException), 500);
+    }
+    catch (e) {
+      Debugger.error(title: 'ApiInterceptor.get()', data: e,);
+      return http.Response(jsonEncode(_unexpectedException), 404);
     }
   }
 
@@ -184,9 +228,19 @@ class ApiInterceptor implements IApiInterceptor {
         statusCode: response.statusCode,
       );
       return response;
-    } catch (e) {
-      Debugger.error(title: 'ApiInterceptor.postFormData()', data: e);
-      return http.Response('$e', 404);
+    }
+    on TimeoutException catch (_) {
+      return http.Response(jsonEncode(_serverTimeoutResponse), 500);
+    }
+    on SocketException catch (_) {
+      return http.Response(jsonEncode(_serverConnectionError), 503);
+    }
+    on HttpException catch (_) {
+      return http.Response(jsonEncode(_badResponseException), 500);
+    }
+    catch (e) {
+      Debugger.error(title: 'ApiInterceptor.get()', data: e,);
+      return http.Response(jsonEncode(_unexpectedException), 404);
     }
   }
 }
