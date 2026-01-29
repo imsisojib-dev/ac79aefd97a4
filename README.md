@@ -506,8 +506,8 @@ Once running, access Swagger UI at: `http://localhost:8088/device_monitorswagger
 <div align="center">
   <img src="documentation/light_mode_ss/home_light.jpg" width="200" alt="Home Light"/>
   <img src="documentation/light_mode_ss/analytics_light.jpg" width="200" alt="Analytics Light"/>
-  <img src="documentation/light_mode_ss/appbar_light.jpg" width="200" alt="AppBar Light"/>
-  <img src="documentation/light_mode_ss/hisotory_dark.jpg" width="200" alt="History Light"/>
+  <img src="documentation/light_mode_ss/appdrawer.jpg" width="200" alt="AppBar Light"/>
+  <img src="documentation/light_mode_ss/history_light.jpg" width="200" alt="History Light"/>
 </div>
 
 ### **Key UI Highlights**
