@@ -239,8 +239,13 @@ ac79aefd97a4/
    ```bash
    flutter pub get
    ```
+   
+3. **Change Server url if needed**
+```bash
+   # flutter app 
+   ```
 
-3**Run the app**
+3. **Run the app**
 
    ```bash
    # Check connected devices
@@ -253,7 +258,7 @@ ac79aefd97a4/
    flutter run --release
    ```
 
-4**Build APK (Android)**
+4. **Build APK (Android)**
 
    ```bash
    flutter build apk --release
