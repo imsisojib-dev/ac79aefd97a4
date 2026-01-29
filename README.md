@@ -24,6 +24,10 @@ containerization.
 
 ---
 
+## Quick Test Before Start
+Download the latest version of Device Monitor APK: [Device Monitor v1.0.0.apk](https://github.com/imsisojib-dev/ac79aefd97a4/raw/main/apks/Device%20Monitor%20v1.0.0.apk)
+
+
 ## 📂 Project Structure
 
 ```
