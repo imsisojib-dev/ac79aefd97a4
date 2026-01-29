@@ -543,10 +543,7 @@ Once running, access Swagger UI at: `http://localhost:8088/device_monitorswagger
     - Validation error handling
     - Network timeout scenarios
     - Edge case values (min/max boundaries)
-    - Concurrent request handling
-    - Data integrity verification
     - Performance testing
-    - **Test Cases**: 10 comprehensive scenarios
 
 #### **Test Execution**
 
