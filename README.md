@@ -240,9 +240,20 @@ ac79aefd97a4/
    flutter pub get
    ```
    
-3. **Change Server url if needed**
+3. **Change Server url if you want** (already configured with production server)
 ```bash
-   # flutter app 
+   # lib/main.dart
+   void main() async {
+
+      Env.baseUrl = #put_your_server_url;
+      
+      #if api credentials need to update
+      Env.X_API_KEY = #put_your_api_key;
+      Env.X_SERVICE_NAME = #put_your_service_name;
+    
+      ...
+  }
+
    ```
 
 3. **Run the app**
@@ -286,7 +297,7 @@ flutter test --coverage
 
 - Java 17
 - Docker & Docker Compose ([Install Docker](https://docs.docker.com/get-docker/))
-- PostgreSQL 15 (if running without Docker)
+- PostgreSQL 16+
 - Maven 3.8+
 
 ### **Installation Steps**
@@ -301,16 +312,16 @@ flutter test --coverage
    Create `.env` file in the root directory:
    ```env
     APP_NAME=DeviceMonitor
-    APP_SECRET=imsisojib
-    APP_PORT=8088
+    APP_SECRET= //your secret
+    APP_PORT= // server port
     
     POSTGRES_DB_SERVER_ADDRESS= //add db server address
     POSTGRES_DB_SERVER_PORT= // add db port address
     POSTGRES_USER= //add db user
     POSTGRES_PASSWORD= // add db password
     
-    X_API_KEY = DEVICEMONITOR3D4E5F6G7H8I9J0K1L2M3N4O5P6
-    X_SERVICE_NAME = device-monitor
+    X_API_KEY = // add your api-key
+    X_SERVICE_NAME = // add your service_name
    ```
 
 3. **Run with Docker (Recommended)**
